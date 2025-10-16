@@ -2,176 +2,288 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Wyszukiwacz</title>
+  <title>Wyszukiwacz Plus 0.09</title>
   <link rel="icon" type="image/x-icon" href="wyszukiwacz.png">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: white;
-      padding: 20px;
-      max-width: 600px;
+    /* Reset stylów */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    h3, h4 {
+      margin-top: 25px;
+    }
+
+    textarea, input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      margin-bottom: 15px;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-transparent);
+    }
+
     label {
       display: block;
-      margin: 5px 0;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-    button:hover {
-      background-color: #f0f0f0;
+      margin: 6px 0;
       cursor: pointer;
     }
-    h3 {
-      margin-top: 30px;
-    }
-    h2 {
-      margin-top: 0px !important;
-    }
-    .button-group {
-      margin-top: 20px;
-    }
+
     .subcategory {
       margin-left: 15px;
+      opacity: 0.9;
     }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+
+    #searchButton {
+      background-color: var(--accent);
+      color: #fff;
+    }
+
+    #searchButton:hover {
+      background-color: var(--accent-hover);
+    }
+
+    button:nth-child(2) {
+      background-color: var(--neutral);
+      color: var(--text-color);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Motyw jasny */
+    :root {
+      --bg-color: #fafafa;
+      --text-color: #222;
+      --input-bg: #fff;
+      --border-color: #ccc;
+      --accent: #0078d7;
+      --accent-hover: #005ea6;
+      --accent-transparent: rgba(0, 120, 215, 0.3);
+      --neutral: #e0e0e0;
+    }
+
+    /* Motyw ciemny */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #1e1e1e;
+        --text-color: #f5f5f5;
+        --input-bg: #2b2b2b;
+        --border-color: #444;
+        --accent: #339cff;
+        --accent-hover: #5cb6ff;
+        --accent-transparent: rgba(51, 156, 255, 0.25);
+        --neutral: #444;
+      }
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section {
+      background-color: var(--input-bg);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .section {
+        box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+      }
+    }
+
   </style>
 </head>
 <body>
-  <h2>Wyszukiwacz v0.09</h2>
-
-  <label for="searchTerm">Wpisz szukane hasło:</label>
-  <input type="text" id="searchTerm" placeholder="Np. poszewka">
-
-  <h3>Wybierz sklepy:</h3>
-
-  <label><input type="checkbox" id="selectAll"> <strong>Zaznacz / Odznacz wszystkie</strong></label>
-  
-  <!-- Sklepy ogólne -->
-  <label><input type="checkbox" class="shop" value="castorama"> Castorama</label>
-  <label><input type="checkbox" class="shop" value="leroymerlin"> Leroy Merlin</label>
-  <label><input type="checkbox" class="shop" value="obi"> OBI</label>
-  <label><input type="checkbox" class="shop" value="mrowka"> Mrówka (brak możliwości sortowania po cenie)</label>
-  <label><input type="checkbox" class="shop" value="action"> Action</label>
-  <label><input type="checkbox" class="shop" value="jysk"> Jysk</label>
-  <label><input type="checkbox" class="shop" value="empik"> Empik</label>
-
-  <!-- Kategoria: Zwierzęta -->
-  <h4>Zwierzęta:</h4>
-  <div class="subcategory">
-    <label><input type="checkbox" class="shop" value="zooplus"> Zooplus</label>
-    <label><input type="checkbox" class="shop" value="maxizoo"> Maxi Zoo</label>
-    <label><input type="checkbox" class="shop" value="bitiba"> Bitiba</label>
+  <div class="header">
+    <h1>🔍 Wyszukiwacz Plus</h1>
+    <p>Wyszukuj produkty jednocześnie w wielu sklepach — od Castoramy po Allegro.</p>
   </div>
 
-  <!-- Checkbox Google -->
-  <label><br><input type="checkbox" id="googleSearch"> Wyszukaj w Google (site:sklep.pl)</label>
+  <div class="section">
+    <p><strong>Wprowadź nazwę/ean (każde w nowej linii):</strong></p>
+    <textarea id="inputValue" rows="6" placeholder="poszewka&#10;poduszka&#10;lampka nocna"></textarea>
 
-  <div class="button-group">
-    <button id="searchButton" onclick="search()" disabled>Szukaj</button>
-    <button onclick="resetForm()">Resetuj</button>
+    <label for="minQuantity" id="minQuantityLabel" class="hidden"><strong>Liczba sztuk od (dla Allegro):</strong></label>
+    <input type="number" id="minQuantity" class="hidden" placeholder="np. 10" min="1">
+
+    <h3>Wybierz sklepy:</h3>
+    <label><input type="checkbox" id="selectAll"> <strong>Zaznacz / odznacz wszystkie</strong></label>
+
+    <div id="shops">
+      <label><input type="checkbox" class="shop" value="castorama"> Castorama</label>
+      <label><input type="checkbox" class="shop" value="leroymerlin"> Leroy Merlin</label>
+      <label><input type="checkbox" class="shop" value="obi"> OBI</label>
+      <label><input type="checkbox" class="shop" value="mrowka"> Mrówka</label>
+      <label><input type="checkbox" class="shop" value="action"> Action</label>
+      <label><input type="checkbox" class="shop" value="jysk"> Jysk</label>
+      <label><input type="checkbox" class="shop" value="empik"> Empik</label>
+      <label><input type="checkbox" class="shop" value="allegro"> Allegro</label>
+      <h4>Zwierzęta:</h4>
+      <div class="subcategory">
+        <label><input type="checkbox" class="shop" value="zooplus"> Zooplus</label>
+        <label><input type="checkbox" class="shop" value="maxizoo"> Maxi Zoo</label>
+        <label><input type="checkbox" class="shop" value="bitiba"> Bitiba</label>
+      </div>
+    </div>
+
+    <label><br><input type="checkbox" id="googleSearch"> Wyszukaj przez Google (site:sklep.pl)</label>
+
+    <div class="button-group">
+      <button id="searchButton" onclick="searchAll()" disabled>Szukaj</button>
+      <button onclick="resetForm()">Resetuj</button>
+    </div>
   </div>
 
   <script>
     const selectAllCheckbox = document.getElementById("selectAll");
     const shopCheckboxes = document.querySelectorAll(".shop");
-    const searchTermInput = document.getElementById("searchTerm");
+    const inputValue = document.getElementById("inputValue");
     const searchButton = document.getElementById("searchButton");
+    const minQuantityInput = document.getElementById("minQuantity");
+    const minQuantityLabel = document.getElementById("minQuantityLabel");
+
+    // Pokazuj/ukrywaj pole liczby sztuk przy Allegro
+    shopCheckboxes.forEach(cb => {
+      cb.addEventListener("change", () => {
+        const allegroSelected = document.querySelector('.shop[value="allegro"]').checked;
+        minQuantityInput.classList.toggle("hidden", !allegroSelected);
+        minQuantityLabel.classList.toggle("hidden", !allegroSelected);
+      });
+    });
 
     // Zaznacz/Odznacz wszystkie
     selectAllCheckbox.addEventListener("change", function () {
       shopCheckboxes.forEach(cb => cb.checked = this.checked);
+      const allegroSelected = document.querySelector('.shop[value="allegro"]').checked;
+      minQuantityInput.classList.toggle("hidden", !allegroSelected);
+      minQuantityLabel.classList.toggle("hidden", !allegroSelected);
     });
 
-    // Synchronizacja checkboxów
-    shopCheckboxes.forEach(cb => {
-      cb.addEventListener("change", function () {
-        const allChecked = Array.from(shopCheckboxes).every(cb => cb.checked);
-        const noneChecked = Array.from(shopCheckboxes).every(cb => !cb.checked);
-
-        if (allChecked) {
-          selectAllCheckbox.checked = true;
-          selectAllCheckbox.indeterminate = false;
-        } else if (noneChecked) {
-          selectAllCheckbox.checked = false;
-          selectAllCheckbox.indeterminate = false;
-        } else {
-          selectAllCheckbox.checked = false;
-          selectAllCheckbox.indeterminate = true;
-        }
-      });
-    });
-
-    // Aktywacja / dezaktywacja przycisku Szukaj
-    searchTermInput.addEventListener("input", function () {
-      searchButton.disabled = !this.value.trim();
+    // Aktywacja przycisku po wpisaniu tekstu
+    inputValue.addEventListener("input", () => {
+      searchButton.disabled = !inputValue.value.trim();
     });
 
     // Obsługa Entera
-    searchTermInput.addEventListener("keypress", function (e) {
+    inputValue.addEventListener("keypress", e => {
       if (e.key === "Enter" && !searchButton.disabled) {
-        search();
+        e.preventDefault();
+        searchAll();
       }
     });
 
-    // Wyszukiwanie
-    function search() {
-      const term = encodeURIComponent(searchTermInput.value.trim());
+    function searchAll() {
+      const inputText = inputValue.value.trim();
+      const minQuantity = minQuantityInput.value.trim();
       const selectedShops = Array.from(document.querySelectorAll('.shop:checked')).map(cb => cb.value);
       const googleSearchEnabled = document.getElementById('googleSearch').checked;
 
-      if (!term) {
-        alert("Wpisz hasło do wyszukania.");
-        return;
-      }
+      if (!inputText) return alert("Wprowadź co najmniej jedno hasło.");
+      if (selectedShops.length === 0) return alert("Zaznacz co najmniej jeden sklep.");
 
-      if (selectedShops.length === 0) {
-        alert("Zaznacz co najmniej jeden sklep.");
-        return;
-      }
+      const terms = inputText.split('\n').map(line => line.trim()).filter(Boolean);
 
       const urls = {
-        castorama: `https://www.castorama.pl/search?sort=product.price&term=${term}`,
-        leroymerlin: `https://www.leroymerlin.pl/search?q=${term}&sort=price-asc`,
-        obi: `https://www.obi.pl/search/${term}/?sortprice=asc`,
-        mrowka: `https://mrowka.com.pl/wyszukiwanie?_Search=${term}`,
-        action: `https://www.action.com/pl-pl/search/?sortBy=PRICE_ASC&q=${term}`,
-        jysk: `https://jysk.pl/search?query=${term}&sort=price_asc&type=product`,
-        empik: `https://www.empik.com/szukaj/produkt?qtype=facetForm&sort=priceAsc&q=${term}&availabilityLabel=do+24h&availabilityLabel=do+48h&availabilityLabel=do+72h&productStateFacet=new`,
-        zooplus: `https://www.zooplus.pl/search/results?q=${term}&sorting=lowest-price`,
-        maxizoo: `https://www.maxizoo.pl/search/?text=${term}&sort=price-asc`,
-        bitiba: `https://www.bitiba.pl/search/results?q=${term}&sorting=lowest-price`
+        castorama: t => `https://www.castorama.pl/search?sort=product.price&term=${t}`,
+        leroymerlin: t => `https://www.leroymerlin.pl/search?q=${t}&sort=price-asc`,
+        obi: t => `https://www.obi.pl/search/${t}/?sortprice=asc`,
+        mrowka: t => `https://mrowka.com.pl/wyszukiwanie?_Search=${t}`,
+        action: t => `https://www.action.com/pl-pl/search/?sortBy=PRICE_ASC&q=${t}`,
+        jysk: t => `https://jysk.pl/search?query=${t}&sort=price_asc&type=product`,
+        empik: t => `https://www.empik.com/szukaj/produkt?qtype=facetForm&sort=priceAsc&q=${t}`,
+        zooplus: t => `https://www.zooplus.pl/search/results?q=${t}&sorting=lowest-price`,
+        maxizoo: t => `https://www.maxizoo.pl/search/?text=${t}&sort=price-asc`,
+        bitiba: t => `https://www.bitiba.pl/search/results?q=${t}&sorting=lowest-price`,
+        allegro: t => {
+          const qty = minQuantity ? `&liczba-sztuk=${minQuantity}` : '';
+          return `https://business.allegro.pl/listing?string=${t}&order=p${qty}&miejsce-wysylki=polska&stan=nowe&offerTypeBuyNow=1`;
+        }
       };
 
-      selectedShops.forEach(shop => {
-        if (googleSearchEnabled) {
-          const googleUrl = `https://www.google.com/search?q=site:${shop}.pl+${term}`;
-          window.open(googleUrl, '_blank');
-        } else {
-          const url = urls[shop];
-          if (url) {
-            window.open(url, '_blank');
+      terms.forEach(term => {
+        const encoded = encodeURIComponent(term);
+        selectedShops.forEach(shop => {
+          if (googleSearchEnabled) {
+            window.open(`https://www.google.com/search?q=site:${shop}.pl+${encoded}`, '_blank');
+          } else if (urls[shop]) {
+            window.open(urls[shop](encoded), '_blank');
           }
-        }
+        });
       });
     }
 
-    // Reset formularza
     function resetForm() {
-      searchTermInput.value = "";
+      inputValue.value = "";
+      minQuantityInput.value = "";
       searchButton.disabled = true;
       shopCheckboxes.forEach(cb => cb.checked = false);
       selectAllCheckbox.checked = false;
-      selectAllCheckbox.indeterminate = false;
       document.getElementById('googleSearch').checked = false;
+      minQuantityInput.classList.add("hidden");
+      minQuantityLabel.classList.add("hidden");
     }
   </script>
 </body>
-
 </html>
